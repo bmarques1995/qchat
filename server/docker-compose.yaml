@@ -1,0 +1,27 @@
+services:
+  cppenv-debug:
+    image: cppenv:debug
+    container_name: cppenv-debug
+    user: vscode
+    volumes:
+      - ./:/workspace
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
+    command: sleep infinity
+
+  postgres:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: example_user
+      POSTGRES_PASSWORD: example_password
+      POSTGRES_DB: example_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/bitnami/postgresql
+
+volumes:
+  pgdata:
