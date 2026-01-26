@@ -8,7 +8,8 @@
             "type": "lldb-dap",
             "request": "launch",
             "name": "QChat Server",
-            "program": "${workspaceFolder}/out/build/linux-debug/qchat",
+            "program": "~/bin/qchat_server",
+            "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
             "args": [
             ],

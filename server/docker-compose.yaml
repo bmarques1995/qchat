@@ -1,14 +1,12 @@
 services:
   cppenv-debug:
-    image: cppenv:debug
-    container_name: cppenv-debug
-    user: vscode
-    volumes:
-      - ./:/workspace
+    image: cppenv
     cap_add:
       - SYS_PTRACE
     security_opt:
-      - seccomp=unconfined
+      - seccomp:unconfined
+    volumes:
+      - ./:/workspace:ro
     command: sleep infinity
 
   postgres:

@@ -1,0 +1,34 @@
+{
+    "git": {
+        "location": "https://git.postgresql.org/git/postgresql.git",
+        "output_suffix": "postgresql",
+        "branch": "",
+        "commit": "4b324845ba5d24682b9b3708a769f00d160afbd7"
+    },
+    "meson": {
+        "build_system": "default",
+        
+        "os_properties": {
+            "windows": {
+                "modify_pkg_paths": false,
+                "c_compiler": "cl",
+                "cxx_compiler": "cl"
+            },
+            "linux": {
+                "modify_pkg_paths": true,
+                "c_compiler": "clang",
+                "cxx_compiler": "clang++"
+            },
+            "macos": {
+                "modify_pkg_paths": true,
+                "c_compiler": "clang",
+                "cxx_compiler": "clang++"
+            },
+            "freebsd": {
+                "modify_pkg_paths": true,
+                "c_compiler": "clang",
+                "cxx_compiler": "clang++"
+            }
+        }
+    }
+}

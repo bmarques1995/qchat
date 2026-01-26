@@ -1,0 +1,33 @@
+{
+  "git": {
+    "location": "https://github.com/rbock/sqlpp23.git",
+    "output_suffix": "sqlpp23",
+    "branch": "main",
+    "commit": "3176befca17abc497d0bfa0a09086ea25d1cc417",
+    "patch": "sqlpp23.patch"
+
+  },
+  "cmake": {
+    "build_system": "default",
+    "relative_root_location": "",
+    "flags": [ "BUILD_POSTGRESQL_CONNECTOR=ON", "BUILD_TESTING=OFF", "CMAKE_INSTALL_LIBDIR=lib" ],
+    "os_properties": {
+      "windows": {
+        "c_compiler": "cl",
+        "cxx_compiler": "cl"
+      },
+      "linux": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "macos": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "freebsd": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      }
+    }
+  }
+}

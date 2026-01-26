@@ -22,6 +22,12 @@ final_coverage/
 *.cso
 *.bin
 
+build_container_cache/
+!build_container_cache/gitkeep
+
+db_container_cache/
+!db_container_cache/gitkeep
+
 __pycache__/
 .win_venv/
 .unix_venv/

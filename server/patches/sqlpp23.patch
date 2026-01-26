@@ -1,0 +1,25 @@
+From e2dafacb704da28e2e888273d8dcd4913f47abb9 Mon Sep 17 00:00:00 2001
+From: bmarques1995 <brunosmarques1995@hotmail.com>
+Date: Mon, 26 Jan 2026 10:51:08 -0300
+Subject: [PATCH] patch
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1e578dd8..dd92ac76 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,7 +43,7 @@ option(BUILD_WITH_MODULES "Build tests with sqlpp23 modules" OFF)
+ 
+ option(DEPENDENCY_CHECK "Check for dependencies of connector and the library" ON)
+ 
+-set(SQLPP23_INSTALL_CMAKEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/Sqlpp23 CACHE STRING "Path to sqlpp23 cmake files")
++set(SQLPP23_INSTALL_CMAKEDIR ${CMAKE_INSTALL_PREFIX}/share/cmake/Sqlpp23 CACHE STRING "Path to sqlpp23 cmake files")
+ 
+ ### Dependencies
+ if(DEPENDENCY_CHECK AND BUILD_MYSQL_CONNECTOR)
+-- 
+2.49.0
+

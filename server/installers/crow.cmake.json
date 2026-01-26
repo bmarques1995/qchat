@@ -1,0 +1,31 @@
+{
+  "git": {
+    "location": "https://github.com/CrowCpp/Crow.git",
+    "output_suffix": "crow",
+    "branch": "v1.3",
+    "commit": "537b44d3d3faa88095885c876aad2059d3315e93"
+  },
+  "cmake": {
+    "build_system": "default",
+    "relative_root_location": "",
+    "flags": [ "CROW_BUILD_TESTS=OFF", "CROW_USE_BOOST=ON", "CMAKE_INSTALL_LIBDIR=lib" ],
+    "os_properties": {
+      "windows": {
+        "c_compiler": "cl",
+        "cxx_compiler": "cl"
+      },
+      "linux": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "macos": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "freebsd": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      }
+    }
+  }
+}

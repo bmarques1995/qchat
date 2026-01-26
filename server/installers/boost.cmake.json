@@ -1,0 +1,31 @@
+{
+  "git": {
+    "location": "https://github.com/boostorg/boost.git",
+    "output_suffix": "boost",
+    "branch": "master",
+    "commit": "1bed2b0712b2119f20d66c5053def9173c8462a5"
+  },
+  "cmake": {
+    "build_system": "default",
+    "relative_root_location": "",
+    "flags": [ "BUILD_SHARED_LIBS=ON", "ZLIB_COMPAT=ON", "BUILD_TESTING=OFF", "CMAKE_INSTALL_LIBDIR=lib" ],
+    "os_properties": {
+      "windows": {
+        "c_compiler": "cl",
+        "cxx_compiler": "cl"
+      },
+      "linux": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "macos": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "freebsd": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      }
+    }
+  }
+}

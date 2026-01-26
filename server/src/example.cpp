@@ -1,8 +1,14 @@
-#include <iostream>
-#include <string>
+#include <crow.h>
 
 int main() {
-    std::string greeting = "Hello, World!";
-    std::cout << greeting << std::endl;
-    return 0;
+    crow::SimpleApp app;
+
+    CROW_ROUTE(app, "/")
+    ([]{
+        crow::json::wvalue x({{"message", "Hello, World!"}});
+        x["message2"] = "Hello, World.. Again!";
+        return x;
+    });
+
+    app.port(8000).run();
 }
