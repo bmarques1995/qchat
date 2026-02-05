@@ -12,7 +12,6 @@
                 "CMAKE_AR": "llvm-ar",
                 "CMAKE_RANLIB": "llvm-ranlib",
                 "CMAKE_LINKER": "lld",
-                "CMAKE_INTERPROCEDURAL_OPTIMIZATION": true,
                 "CMAKE_EXPORT_COMPILE_COMMANDS": true,
                 "BUILD_SHARED_LIBS": true
             },

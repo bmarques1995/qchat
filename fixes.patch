@@ -1,0 +1,226 @@
+From 48c3c6c2bf8b63c9f73eeb9bc8abd7f20d96eea3 Mon Sep 17 00:00:00 2001
+From: Your Name <you@example.com>
+Date: Sat, 31 Jan 2026 19:02:42 -0300
+Subject: [PATCH] Sample debug server
+
+---
+ server/CMakePresets.json            |  9 +++++----
+ server/cmake_helpers                |  2 +-
+ server/docker-compose.yaml          |  2 +-
+ server/installers/boost.cmake.json  |  2 +-
+ server/installers/sqlpp.cmake.json  |  2 +-
+ server/instructions.md              |  1 +
+ server/patches/sqlpp23.patch        | 29 +++++++++++++++++++++--------
+ server/src/CMakeLists.txt           | 15 +++++++++------
+ server/src/lldb_test/test_lldb.cpp  |  9 +++++++++
+ server/src/{ => server}/example.cpp |  0
+ 10 files changed, 49 insertions(+), 22 deletions(-)
+ create mode 100644 server/instructions.md
+ create mode 100644 server/src/lldb_test/test_lldb.cpp
+ rename server/src/{ => server}/example.cpp (100%)
+
+diff --git a/server/CMakePresets.json b/server/CMakePresets.json
+index 6552914..38efc3f 100644
+--- a/server/CMakePresets.json
++++ b/server/CMakePresets.json
+@@ -4,7 +4,7 @@
+         {
+             "name": "linux-base",
+             "hidden": true,
+-            "generator": "Ninja",
++            "generator": "Unix Makefiles",
+             "binaryDir": "${sourceDir}/out/build/${presetName}",
+             "cacheVariables": {
+                 "CMAKE_C_COMPILER": "clang",
+@@ -12,7 +12,6 @@
+                 "CMAKE_AR": "llvm-ar",
+                 "CMAKE_RANLIB": "llvm-ranlib",
+                 "CMAKE_LINKER": "lld",
+-                "CMAKE_INTERPROCEDURAL_OPTIMIZATION": true,
+                 "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+                 "BUILD_SHARED_LIBS": true
+             },
+@@ -29,7 +28,8 @@
+             "installDir": "/usr/local",
+             "cacheVariables": {
+                 "CMAKE_BUILD_TYPE": "Debug",
+-                "CMAKE_PREFIX_PATH": "/usr/local"
++                "CMAKE_PREFIX_PATH": "/usr/local",
++                "CMAKE_INTERPROCEDURAL_OPTIMIZATION": false
+             }
+         },
+         {
+@@ -39,7 +39,8 @@
+             "installDir": "/usr/local",
+             "cacheVariables": {
+                 "CMAKE_BUILD_TYPE": "Release",
+-                "CMAKE_PREFIX_PATH": "/usr/local"
++                "CMAKE_PREFIX_PATH": "/usr/local",
++                "CMAKE_INTERPROCEDURAL_OPTIMIZATION": true
+             }
+         }
+     ]
+diff --git a/server/cmake_helpers b/server/cmake_helpers
+index 5aea251..0aee555 160000
+--- a/server/cmake_helpers
++++ b/server/cmake_helpers
+@@ -1 +1 @@
+-Subproject commit 5aea251ec121ab266327dffeb980c6dcf830e379
++Subproject commit 0aee5558989f5b9d524b89933fda04c78582bbcf
+diff --git a/server/docker-compose.yaml b/server/docker-compose.yaml
+index 7e52185..412b5f9 100644
+--- a/server/docker-compose.yaml
++++ b/server/docker-compose.yaml
+@@ -6,7 +6,7 @@ services:
+     security_opt:
+       - seccomp:unconfined
+     volumes:
+-      - ./:/workspace:ro
++      - ./:/workspace
+     command: sleep infinity
+ 
+   postgres:
+diff --git a/server/installers/boost.cmake.json b/server/installers/boost.cmake.json
+index a3db199..5116e38 100644
+--- a/server/installers/boost.cmake.json
++++ b/server/installers/boost.cmake.json
+@@ -8,7 +8,7 @@
+   "cmake": {
+     "build_system": "default",
+     "relative_root_location": "",
+-    "flags": [ "BUILD_SHARED_LIBS=ON", "ZLIB_COMPAT=ON", "BUILD_TESTING=OFF", "CMAKE_INSTALL_LIBDIR=lib" ],
++    "flags": [ "BUILD_SHARED_LIBS=ON", "BUILD_TESTING=OFF"],
+     "os_properties": {
+       "windows": {
+         "c_compiler": "cl",
+diff --git a/server/installers/sqlpp.cmake.json b/server/installers/sqlpp.cmake.json
+index 4eee2e1..fbac05c 100644
+--- a/server/installers/sqlpp.cmake.json
++++ b/server/installers/sqlpp.cmake.json
+@@ -10,7 +10,7 @@
+   "cmake": {
+     "build_system": "default",
+     "relative_root_location": "",
+-    "flags": [ "BUILD_POSTGRESQL_CONNECTOR=ON", "BUILD_TESTING=OFF", "CMAKE_INSTALL_LIBDIR=lib" ],
++    "flags": [ "BUILD_POSTGRESQL_CONNECTOR=ON", "UNSET_TESTS=ON", "PostgreSQL_LIBRARY={install_prefix}/lib64/libpq.so" ],
+     "os_properties": {
+       "windows": {
+         "c_compiler": "cl",
+diff --git a/server/instructions.md b/server/instructions.md
+new file mode 100644
+index 0000000..5f2b493
+--- /dev/null
++++ b/server/instructions.md
+@@ -0,0 +1 @@
++`docker compose exec cppenv-debug zsh`
+\ No newline at end of file
+diff --git a/server/patches/sqlpp23.patch b/server/patches/sqlpp23.patch
+index 57c9d8b..f37e5da 100644
+--- a/server/patches/sqlpp23.patch
++++ b/server/patches/sqlpp23.patch
+@@ -1,17 +1,21 @@
+-From e2dafacb704da28e2e888273d8dcd4913f47abb9 Mon Sep 17 00:00:00 2001
+-From: bmarques1995 <brunosmarques1995@hotmail.com>
+-Date: Mon, 26 Jan 2026 10:51:08 -0300
++From 3f057ccef9ad96e8b431244d015cfa0f223b9e87 Mon Sep 17 00:00:00 2001
++From: root <root@DESKTOP-8GDFAOF.localdomain>
++Date: Sat, 31 Jan 2026 16:28:52 -0300
+ Subject: [PATCH] patch
+ 
+ ---
+- CMakeLists.txt | 2 +-
+- 1 file changed, 1 insertion(+), 1 deletion(-)
++ CMakeLists.txt | 7 +++++--
++ 1 file changed, 5 insertions(+), 2 deletions(-)
+ 
+ diff --git a/CMakeLists.txt b/CMakeLists.txt
+-index 1e578dd8..dd92ac76 100644
++index 1e578dd8..5fc72ba2 100644
+ --- a/CMakeLists.txt
+ +++ b/CMakeLists.txt
+-@@ -43,7 +43,7 @@ option(BUILD_WITH_MODULES "Build tests with sqlpp23 modules" OFF)
++@@ -40,10 +40,11 @@ option(BUILD_POSTGRESQL_CONNECTOR "Build PostgreSQL Connector" OFF)
++ option(BUILD_SQLITE3_CONNECTOR "Build SQLite3 Connector" OFF)
++ option(BUILD_SQLCIPHER_CONNECTOR "Build SQLite3 Connector with SQLCipher" OFF)
++ option(BUILD_WITH_MODULES "Build tests with sqlpp23 modules" OFF)
+++option(UNSET_TESTS "Unset tests" OFF)
+  
+  option(DEPENDENCY_CHECK "Check for dependencies of connector and the library" ON)
+  
+@@ -20,6 +24,15 @@ index 1e578dd8..dd92ac76 100644
+  
+  ### Dependencies
+  if(DEPENDENCY_CHECK AND BUILD_MYSQL_CONNECTOR)
++@@ -152,5 +153,7 @@ endif()
++ 
++ ### Tests
++ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
++-    add_subdirectory(tests)
+++    if(NOT UNSET_TESTS)
+++        add_subdirectory(tests)
+++    endif()
++ endif()
+ -- 
+-2.49.0
++2.51.2.windows.1
+ 
+diff --git a/server/src/CMakeLists.txt b/server/src/CMakeLists.txt
+index 5923f40..191e97b 100644
+--- a/server/src/CMakeLists.txt
++++ b/server/src/CMakeLists.txt
+@@ -1,22 +1,25 @@
+ set(TARGET_NAME qchat_server)
+ 
+-file(GLOB_RECURSE QCHAT_SERVER_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.cpp")
+-file(GLOB_RECURSE QCHAT_SERVER_HDRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.hpp")
++file(GLOB_RECURSE QCHAT_SERVER_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "server/*.cpp")
++file(GLOB_RECURSE QCHAT_SERVER_HDRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "server/*.hpp")
+ 
+ trace_dependency(NAME zlib INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/zlib.cmake.json")
+-trace_dependency(NAME zstd INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/zstd.cmake.json" CUSTOM_SEARCH_DIR "${CMAKE_PREFIX_PATH}/lib/${CMAKE_LIBRARY_ARCHITECTURE}/cmake/OpenSSL")
++trace_dependency(NAME zstd INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/zstd.cmake.json")
+ trace_dependency(NAME brotli INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/brotli.cmake.json")
+ trace_dependency(NAME OpenSSL INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/openssl.custom.json" CUSTOM_SEARCH_DIR "${CMAKE_PREFIX_PATH}/lib64/cmake/OpenSSL")
+-trace_library(NAME pq INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/libpq.meson.json" CUSTOM_SEARCH_DIR "${CMAKE_PREFIX_PATH}/lib/${CMAKE_LIBRARY_ARCHITECTURE}")
++trace_library(NAME pq INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/libpq.meson.json" CUSTOM_SEARCH_DIR "${CMAKE_PREFIX_PATH}/lib64")
+ trace_dependency(NAME Sqlpp23 INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/sqlpp.cmake.json")
+ trace_dependency(NAME Boost INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/boost.cmake.json")
+ trace_dependency(NAME Crow INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/crow.cmake.json")
+ 
+ add_executable(${TARGET_NAME} ${QCHAT_SERVER_SRCS} ${QCHAT_SERVER_HDRS})
++add_executable(lldb_test lldb_test/test_lldb.cpp)
+ target_link_libraries(${TARGET_NAME} Crow::Crow)
+ 
+ target_include_directories(${TARGET_NAME} PRIVATE 
+-                                        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
++                                        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/server>)
+ 
+ set_cxx_project_standards(${TARGET_NAME} 20 FALSE)
+-append_rpath(EXTRA_PATH "${CMAKE_PREFIX_PATH}/lib/${CMAKE_LIBRARY_ARCHITECTURE}")
+\ No newline at end of file
++set_cxx_project_standards(lldb_test 20 FALSE)
++append_rpath(TARGET_NAME ${TARGET_NAME})
++append_rpath(TARGET_NAME lldb_test)
+diff --git a/server/src/lldb_test/test_lldb.cpp b/server/src/lldb_test/test_lldb.cpp
+new file mode 100644
+index 0000000..9764592
+--- /dev/null
++++ b/server/src/lldb_test/test_lldb.cpp
+@@ -0,0 +1,9 @@
++#include <sstream>
++#include <iostream>
++
++int main(int argc, char** argv)
++{
++    std::string teste = "Ola LLDB";
++    std::cout << teste << "\n";
++    return 0;
++}
+\ No newline at end of file
+diff --git a/server/src/example.cpp b/server/src/server/example.cpp
+similarity index 100%
+rename from server/src/example.cpp
+rename to server/src/server/example.cpp
+-- 
+2.51.2.windows.1
+

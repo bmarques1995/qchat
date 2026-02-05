@@ -1,0 +1,20 @@
+[
+{
+  "directory": "/mnt/d/qchat/server/out/build/linux-debug",
+  "command": "/usr/bin/clang++ -DBOOST_CONTAINER_DYN_LINK -DBOOST_CONTAINER_NO_LIB -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DCROW_USE_BOOST -I/mnt/d/qchat/server/src -g -std=gnu++20 @src/CMakeFiles/qchat_server.dir/example.cpp.o.modmap -o src/CMakeFiles/qchat_server.dir/example.cpp.o -c /mnt/d/qchat/server/src/example.cpp",
+  "file": "/mnt/d/qchat/server/src/example.cpp",
+  "output": "/mnt/d/qchat/server/out/build/linux-debug/src/CMakeFiles/qchat_server.dir/example.cpp.o"
+},
+{
+  "directory": "/mnt/d/qchat/server/out/build/linux-debug",
+  "command": "/usr/bin/clang++ -DBOOST_CONTAINER_DYN_LINK -DBOOST_CONTAINER_NO_LIB -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DCROW_USE_BOOST -I/mnt/d/qchat/server/src -g -std=gnu++20 @src/CMakeFiles/qchat_server.dir/lldb_test/test_lldb.cpp.o.modmap -o src/CMakeFiles/qchat_server.dir/lldb_test/test_lldb.cpp.o -c /mnt/d/qchat/server/src/lldb_test/test_lldb.cpp",
+  "file": "/mnt/d/qchat/server/src/lldb_test/test_lldb.cpp",
+  "output": "/mnt/d/qchat/server/out/build/linux-debug/src/CMakeFiles/qchat_server.dir/lldb_test/test_lldb.cpp.o"
+},
+{
+  "directory": "/mnt/d/qchat/server/out/build/linux-debug",
+  "command": "/usr/bin/clang++ -DBOOST_CONTAINER_DYN_LINK -DBOOST_CONTAINER_NO_LIB -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DCROW_USE_BOOST -I/mnt/d/qchat/server/src -g -std=gnu++20 @src/CMakeFiles/qchat_server.dir/server/example.cpp.o.modmap -o src/CMakeFiles/qchat_server.dir/server/example.cpp.o -c /mnt/d/qchat/server/src/server/example.cpp",
+  "file": "/mnt/d/qchat/server/src/server/example.cpp",
+  "output": "/mnt/d/qchat/server/out/build/linux-debug/src/CMakeFiles/qchat_server.dir/server/example.cpp.o"
+}
+]
