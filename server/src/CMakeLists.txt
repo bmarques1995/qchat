@@ -22,6 +22,7 @@ target_link_libraries(${TARGET_NAME} Crow::Crow sqlpp23::sqlpp23 sqlpp23::postgr
 
 target_include_directories(${TARGET_NAME} PUBLIC 
                                         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/server>
+                                        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/server/entities>
                                         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/server/views>
                                         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/server/core>)
 

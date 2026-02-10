@@ -29,6 +29,7 @@ namespace QChatServer
         std::unordered_map<std::string, std::string> m_ArgList;
 
         void ProcessArgList(int argc, char** argv);
+        void SetupDatabase();
 
         static void EnableSingleton(Application* ptr);
     };

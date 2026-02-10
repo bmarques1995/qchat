@@ -2,6 +2,7 @@
 #include "settings.hpp"
 #include "urls.hpp"
 #include <unordered_map>
+#include "users.hpp"
 
 const std::unordered_map<std::string, std::string> s_AllowedArgs
 {
@@ -10,36 +11,6 @@ const std::unordered_map<std::string, std::string> s_AllowedArgs
 };
 
 QChatServer::Application* QChatServer::Application::s_Instance = nullptr;
-
-namespace entity
-{
-  struct Users_
-  {
-    struct Id
-    {
-      SQLPP_CREATE_NAME_TAG_FOR_SQL_AND_CPP(id, id);
-      using data_type = ::sqlpp::integral;
-      using has_default = std::true_type;
-    };
-
-    struct Name
-    {
-      SQLPP_CREATE_NAME_TAG_FOR_SQL_AND_CPP(name, name);
-      using data_type = ::sqlpp::text;
-      using has_default = std::true_type;
-    };
-
-    SQLPP_CREATE_NAME_TAG_FOR_SQL_AND_CPP(users, users);
-    template<typename T>
-    using _table_columns = sqlpp::table_columns<T,
-               Id,
-               Name>;
-    using _required_insert_columns = sqlpp::detail::type_set<>;
-  };
-  using Users = ::sqlpp::table_t<Users_>;
-}
-
-constexpr auto users = entity::Users{};
 
 QChatServer::Application::Application(int argc, char** argv)
 {
@@ -50,19 +21,7 @@ QChatServer::Application::Application(int argc, char** argv)
     {
         m_Settings.reset(new Settings(it->second));
     }
-        
-    auto config = std::make_shared<sqlpp::postgresql::connection_config>();
-    config->user = m_Settings->GetValue<std::string>("database", "user");
-    config->dbname = m_Settings->GetValue<std::string>("database", "database");
-    config->password = m_Settings->GetValue<std::string>("database", "password");
-    config->host = m_Settings->GetValue<std::string>("database", "host");
-    config->port = (uint16_t)m_Settings->GetValue<uint32_t>("database", "port");
-    config->connect_timeout = 3;
-
-    // Create a connection
-    
-    m_DB.connect_using(config);
-
+    SetupDatabase();
     //m_DB(insert_into(users).set(users.name = "foobar"));
 
     auto query = m_DB(select(all_of(users)).from(users));
@@ -78,7 +37,7 @@ QChatServer::Application::Application(int argc, char** argv)
 
 QChatServer::Application::~Application()
 {
-
+    
 }
 
 void QChatServer::Application::Run()
@@ -101,6 +60,19 @@ void QChatServer::Application::ProcessArgList(int argc, char** argv)
             m_ArgList[it->second] = argv[currentArg + 2];
         currentArg += 2;
     }
+}
+
+void QChatServer::Application::SetupDatabase()
+{
+    auto config = std::make_shared<sqlpp::postgresql::connection_config>();
+    config->user = m_Settings->GetValue<std::string>("database", "user");
+    config->dbname = m_Settings->GetValue<std::string>("database", "database");
+    config->password = m_Settings->GetValue<std::string>("database", "password");
+    config->host = m_Settings->GetValue<std::string>("database", "host");
+    config->port = (uint16_t)m_Settings->GetValue<uint32_t>("database", "port");
+    config->connect_timeout = 3;
+    
+    m_DB.connect_using(config);
 }
 
 void QChatServer::Application::EnableSingleton(Application* ptr)
