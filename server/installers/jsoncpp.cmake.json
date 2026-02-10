@@ -1,0 +1,33 @@
+{
+  "git": {
+    "location": "https://github.com/open-source-parsers/jsoncpp.git",
+    "output_suffix": "jsoncpp",
+    "branch": "master",
+    "commit": "89e2973c754a9c02a49974d839779b151e95afd6",
+    "patch": ""
+
+  },
+  "cmake": {
+    "build_system": "default",
+    "relative_root_location": "",
+    "flags": [  ],
+    "os_properties": {
+      "windows": {
+        "c_compiler": "cl",
+        "cxx_compiler": "cl"
+      },
+      "linux": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "macos": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "freebsd": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      }
+    }
+  }
+}

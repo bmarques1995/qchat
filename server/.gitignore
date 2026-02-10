@@ -36,3 +36,4 @@ compile_commands.json
 .cache/
 client.log
 core.log
+env_vars.json

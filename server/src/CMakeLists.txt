@@ -11,13 +11,14 @@ trace_library(NAME pq INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/libpq.mes
 trace_dependency(NAME Sqlpp23 INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/sqlpp.cmake.json")
 trace_dependency(NAME Boost INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/boost.cmake.json")
 trace_dependency(NAME Crow INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/crow.cmake.json")
+trace_dependency(NAME jsoncpp INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/jsoncpp.cmake.json")
 
 include(CMakeFindDependencyMacro)
 set(PostgreSQL_LIBRARY ${CMAKE_PREFIX_PATH}/lib64/libpq.so)
 find_dependency(PostgreSQL)
 
 add_library(${TARGET_NAME} SHARED ${QCHAT_SERVER_SRCS} ${QCHAT_SERVER_HDRS})
-target_link_libraries(${TARGET_NAME} Crow::Crow sqlpp23::sqlpp23 sqlpp23::postgresql)
+target_link_libraries(${TARGET_NAME} Crow::Crow sqlpp23::sqlpp23 sqlpp23::postgresql jsoncpp_lib)
 
 target_include_directories(${TARGET_NAME} PUBLIC 
                                         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/server>

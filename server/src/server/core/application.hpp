@@ -5,6 +5,9 @@
 #include <sqlpp23/core/type_traits/data_type.h>
 #include <sqlpp23/sqlpp23.h>
 #include <sqlpp23/postgresql/postgresql.h>
+#include <unordered_map>
+#include "settings.hpp"
+#include <memory>
 
 namespace QChatServer
 {
@@ -22,6 +25,10 @@ namespace QChatServer
         static Application* s_Instance;
         crow::SimpleApp m_CrowApp;
         sqlpp::postgresql::connection m_DB;
+        std::shared_ptr<Settings> m_Settings;
+        std::unordered_map<std::string, std::string> m_ArgList;
+
+        void ProcessArgList(int argc, char** argv);
 
         static void EnableSingleton(Application* ptr);
     };

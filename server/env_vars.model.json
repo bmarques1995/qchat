@@ -1,0 +1,14 @@
+{
+    "database":
+    {
+        "host": "127.0.0.1",
+        "port": 5432,
+        "database": "<database_name>",
+        "user": "<user_name>",
+        "password": "<password>"
+    },
+    "connection":
+    {
+        "port": 8000
+    }
+}
