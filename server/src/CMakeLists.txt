@@ -20,6 +20,8 @@ add_library(${TARGET_NAME} SHARED ${QCHAT_SERVER_SRCS} ${QCHAT_SERVER_HDRS})
 target_link_libraries(${TARGET_NAME} Crow::Crow sqlpp23::sqlpp23 sqlpp23::postgresql)
 
 target_include_directories(${TARGET_NAME} PUBLIC 
+                                        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/server>
+                                        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/server/views>
                                         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/server/core>)
 
 set_cxx_project_standards(${TARGET_NAME} 23 FALSE)

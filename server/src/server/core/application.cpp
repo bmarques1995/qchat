@@ -1,4 +1,5 @@
 #include "application.hpp"
+#include "urls.hpp"
 
 QChatServer::Application* QChatServer::Application::s_Instance = nullptr;
 
@@ -57,20 +58,7 @@ QChatServer::Application::Application(int argc, char** argv)
                 << ", name=" << row.name << '\n';
     }
 
-    CROW_ROUTE(m_CrowApp, "/").methods("GET"_method)
-    ([]{
-        crow::json::wvalue x({{"message", "Hello, World!"}});
-        x["message2"] = "Hello, World.. Again!";
-        return x;
-    });
-
-    CROW_ROUTE(m_CrowApp, "/add_json")
-        .methods("POST"_method)  // Specify that this route only accepts POST requests
-        ([]{
-            crow::json::wvalue x({{"message", "Hello, World!"}});
-            x["message2"] = "Hello, World... this time from a POST";
-            return x;
-        });
+    RegisterRoutes(&m_CrowApp);
 }
 
 QChatServer::Application::~Application()
