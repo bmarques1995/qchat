@@ -16,23 +16,24 @@ include(CMakeFindDependencyMacro)
 set(PostgreSQL_LIBRARY ${CMAKE_PREFIX_PATH}/lib64/libpq.so)
 find_dependency(PostgreSQL)
 
-add_executable(${TARGET_NAME} ${QCHAT_SERVER_SRCS} ${QCHAT_SERVER_HDRS})
+add_library(${TARGET_NAME} SHARED ${QCHAT_SERVER_SRCS} ${QCHAT_SERVER_HDRS})
 target_link_libraries(${TARGET_NAME} Crow::Crow sqlpp23::sqlpp23 sqlpp23::postgresql)
 
-target_include_directories(${TARGET_NAME} PRIVATE 
-                                        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/server>)
+target_include_directories(${TARGET_NAME} PUBLIC 
+                                        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/server/core>)
 
 set_cxx_project_standards(${TARGET_NAME} 23 FALSE)
 
-set(TARGET_2 lldb_test)
+set(TARGET_2 qchat_server_exec)
 
-file(GLOB_RECURSE LLDB_TESTS_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "lldb_test/*.cpp")
-file(GLOB_RECURSE LLDB_TESTS_HDRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "lldb_test/*.hpp")
+file(GLOB_RECURSE QCHAT_SERVER_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "qchat_server/*.cpp")
+file(GLOB_RECURSE QCHAT_SERVER_HDRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "qchat_server/*.hpp")
 
-add_executable(${TARGET_2} ${LLDB_TESTS_SRCS} ${LLDB_TESTS_HDRS})
+add_executable(${TARGET_2} ${QCHAT_SERVER_SRCS} ${QCHAT_SERVER_SRCS})
+target_link_libraries(${TARGET_2} PUBLIC ${TARGET_NAME})
 
 target_include_directories(${TARGET_2} PRIVATE 
-                                        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lldb_test>)
+                                        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/qchat_server>)
 
 set_cxx_project_standards(${TARGET_2} 23 FALSE)
 append_rpath(EXTRA_PATH "${CMAKE_PREFIX_PATH}/lib/${CMAKE_LIBRARY_ARCHITECTURE}")

@@ -1,11 +1,8 @@
-#include <crow.h>
-#include <sqlpp23/core/database/connection.h>
-#include <sqlpp23/core/type_traits/data_type.h>
-#include <sqlpp23/sqlpp23.h>
-#include <sqlpp23/postgresql/postgresql.h>
-#include <iostream>
+#include "application.hpp"
 
-namespace db
+QChatServer::Application* QChatServer::Application::s_Instance = nullptr;
+
+namespace entity
 {
   struct Users_
   {
@@ -33,10 +30,11 @@ namespace db
   using Users = ::sqlpp::table_t<Users_>;
 }
 
-constexpr auto users = db::Users{};
+constexpr auto users = entity::Users{};
 
-int main() {
-
+QChatServer::Application::Application(int argc, char** argv)
+{
+    EnableSingleton(this);
     auto config = std::make_shared<sqlpp::postgresql::connection_config>();
     config->user = "qchat";
     config->dbname = "qchat";
@@ -46,12 +44,12 @@ int main() {
     config->connect_timeout = 3;
 
     // Create a connection
-    sqlpp::postgresql::connection db;
-    db.connect_using(config);
+    
+    m_DB.connect_using(config);
 
-    //db(insert_into(users).set(users.name = "foobar"));
+    //m_DB(insert_into(users).set(users.name = "foobar"));
 
-    auto query = db(select(all_of(users)).from(users));
+    auto query = m_DB(select(all_of(users)).from(users));
 
     for (const auto& row : query)
     {
@@ -59,22 +57,38 @@ int main() {
                 << ", name=" << row.name << '\n';
     }
 
-    crow::SimpleApp app;
-
-    CROW_ROUTE(app, "/").methods("GET"_method)
+    CROW_ROUTE(m_CrowApp, "/").methods("GET"_method)
     ([]{
         crow::json::wvalue x({{"message", "Hello, World!"}});
         x["message2"] = "Hello, World.. Again!";
         return x;
     });
 
-    CROW_ROUTE(app, "/add_json")
+    CROW_ROUTE(m_CrowApp, "/add_json")
         .methods("POST"_method)  // Specify that this route only accepts POST requests
         ([]{
             crow::json::wvalue x({{"message", "Hello, World!"}});
             x["message2"] = "Hello, World... this time from a POST";
             return x;
         });
+}
 
-    app.bindaddr("0.0.0.0").port(7700).run();
+QChatServer::Application::~Application()
+{
+
+}
+
+void QChatServer::Application::Run()
+{
+    m_CrowApp.bindaddr("0.0.0.0").port(7700).run();
+}
+
+QChatServer::Application* QChatServer::Application::GetInstance()
+{
+    return s_Instance;
+}
+
+void QChatServer::Application::EnableSingleton(Application* ptr)
+{
+    s_Instance = ptr;
 }
